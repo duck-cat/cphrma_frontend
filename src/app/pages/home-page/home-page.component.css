@@ -1,0 +1,477 @@
+/* ── Layout ── */
+.layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  font-family: var(--font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+}
+
+/* ── Side Navigation ── */
+.side-nav {
+  width: 240px;
+  min-width: 240px;
+  height: 100vh;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #e2e8f0;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.06);
+  z-index: 10;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1e293b;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.nav-brand i {
+  font-size: 1.3rem;
+  color: #63e6be;
+}
+
+.nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0.75rem 0;
+  flex: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1.5rem;
+  cursor: pointer;
+  color: #64748b;
+  transition: background 0.15s, color 0.15s, border-left-color 0.15s;
+  border-left: 3px solid transparent;
+  user-select: none;
+}
+
+.nav-item:hover {
+  background: rgba(99, 230, 190, 0.08);
+  color: #1e293b;
+}
+
+.nav-item.active {
+  background: rgba(99, 230, 190, 0.15);
+  color: #1e293b;
+  border-left-color: #63e6be;
+}
+
+.nav-item i {
+  font-size: 1rem;
+  width: 1.1rem;
+  text-align: center;
+}
+
+.nav-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.nav-badge {
+  margin-left: auto;
+  background: #63e6be;
+  color: #fff;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  min-width: 1.3rem;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.nav-footer {
+  border-top: 1px solid #e2e8f0;
+  padding: 0.5rem 0;
+}
+
+.nav-user {
+  cursor: default;
+}
+
+.nav-user:hover {
+  background: transparent;
+}
+
+/* ── Main Content ── */
+.main-content {
+  flex: 1;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #f1f5f9;
+  min-width: 0;
+}
+
+/* ── Top Bar ── */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  flex-shrink: 0;
+}
+
+.top-bar-left {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.record-count {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+}
+
+/* ── Content Body ── */
+.content-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* ── Filter Bar ── */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  padding: 0.875rem 1rem;
+  flex-shrink: 0;
+}
+
+.filter-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 200px;
+}
+
+.filter-right {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+}
+
+.search-input {
+  width: 280px;
+}
+
+:host ::ng-deep .filter-dropdown .p-dropdown {
+  min-width: 155px;
+}
+
+/* ── Table ── */
+.table-wrap {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  flex: 1;
+}
+
+:host ::ng-deep .table-wrap .p-datatable .p-datatable-thead > tr > th {
+  background: #f8fafc;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid #63e6be;
+}
+
+/* Primary button accent */
+:host ::ng-deep .p-button:not(.p-button-outlined):not(.p-button-text):not(.p-button-secondary) {
+  background: #63e6be;
+  border-color: #63e6be;
+  color: #1e293b;
+}
+
+:host ::ng-deep .p-button:not(.p-button-outlined):not(.p-button-text):not(.p-button-secondary):hover {
+  background: #38d9a9;
+  border-color: #38d9a9;
+  color: #1e293b;
+}
+
+.data-row {
+  cursor: pointer;
+}
+
+.empty-cell {
+  text-align: center;
+  padding: 3rem 1rem !important;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  color: #94a3b8;
+}
+
+.empty-state i {
+  font-size: 2.5rem;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* ── Edit Sidebar ── */
+:host ::ng-deep .edit-sidebar .p-sidebar-header {
+  padding: 1rem 1.25rem 0.875rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+:host ::ng-deep .edit-sidebar .p-sidebar-content {
+  padding: 1.25rem;
+  overflow-y: auto;
+}
+
+:host ::ng-deep .edit-sidebar .p-sidebar-footer {
+  padding: 0.875rem 1.25rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.sidebar-hdr {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.field label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.sidebar-ftr {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.w-full {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ── Hamburger (hidden by default, shown on mobile) ── */
+.hamburger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #1e293b;
+  font-size: 1.1rem;
+  padding: 0.35rem 0.45rem;
+  border-radius: 0.375rem;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+
+.hamburger:hover {
+  background: rgba(99, 230, 190, 0.12);
+}
+
+/* ── Mobile nav backdrop ── */
+.nav-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 9;
+}
+
+.nav-backdrop.visible {
+  display: block;
+}
+
+/* ──────────────────────────────────────────────
+   Tablet  640px – 1024px  →  icon-only side nav
+   ────────────────────────────────────────────── */
+@media (max-width: 1024px) and (min-width: 641px) {
+  .side-nav {
+    width: 64px;
+    min-width: 64px;
+  }
+
+  .nav-brand {
+    justify-content: center;
+    padding: 1.25rem 0;
+  }
+
+  .nav-brand span {
+    display: none;
+  }
+
+  .nav-item {
+    justify-content: center;
+    padding: 0.9rem 0;
+  }
+
+  .nav-item i {
+    width: auto;
+  }
+
+  .nav-label,
+  .nav-badge {
+    display: none;
+  }
+
+  .nav-user {
+    justify-content: center;
+  }
+
+  .filter-bar {
+    flex-wrap: wrap;
+    gap: 0.625rem;
+  }
+
+  .search-input {
+    width: 200px;
+  }
+}
+
+/* ──────────────────────────────────────────────
+   Mobile  ≤ 640px  →  off-canvas overlay nav
+   ────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  /* Show hamburger */
+  .hamburger {
+    display: flex;
+  }
+
+  /* Side nav: fixed overlay, hidden off-screen */
+  .side-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 240px;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 10;
+  }
+
+  .side-nav.open {
+    transform: translateX(0);
+  }
+
+  /* Main content fills full width */
+  .main-content {
+    width: 100%;
+  }
+
+  /* Top bar */
+  .top-bar {
+    padding: 0.75rem 1rem;
+  }
+
+  .top-bar-left {
+    gap: 0.5rem;
+  }
+
+  .top-bar-right .p-button .p-button-label {
+    display: none;
+  }
+
+  .page-title {
+    font-size: 1rem;
+  }
+
+  /* Content body */
+  .content-body {
+    padding: 0.75rem;
+  }
+
+  /* Filter bar: stack vertically */
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.75rem;
+  }
+
+  .filter-left {
+    min-width: unset;
+    width: 100%;
+  }
+
+  .search-input {
+    width: 100%;
+  }
+
+  .filter-right {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  :host ::ng-deep .filter-dropdown .p-dropdown {
+    min-width: unset;
+    flex: 1;
+  }
+
+  /* Sidebar full width on mobile */
+  :host ::ng-deep .edit-sidebar .p-sidebar {
+    width: 100% !important;
+  }
+}
