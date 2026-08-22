@@ -13,7 +13,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { RippleModule } from 'primeng/ripple';
 import { MessageService } from 'primeng/api';
 import { InventoryService } from '../../services/inventory.service';
-
+import {ApprovalsService} from "../../services/approvals.service";
+import { DialogModule } from 'primeng/dialog';
 interface NavMenuItem {
   label: string;
   icon: string;
@@ -25,6 +26,7 @@ interface NavMenuItem {
   selector: 'app-home-page',
   standalone: true,
   imports: [
+    DialogModule,
     CommonModule,
     FormsModule,
     SidebarModule,
@@ -202,11 +204,13 @@ export class HomePageComponent implements OnInit {
 
   constructor(
     private messageService: MessageService,
-    private inventoryService: InventoryService
+    private inventoryService: InventoryService,
+    private approvalService:ApprovalsService
   ) {}
 
   ngOnInit(): void {
     this.loadInventory();
+  
   }
 
   loadInventory(): void {
@@ -224,8 +228,26 @@ export class HomePageComponent implements OnInit {
     });
   }
 
-  selectMenu(key: string): void {
+  loadApprovals(){
+this.loading = true;
+    this.approvalService.getAll().subscribe({
+      next: (data) => {
+        this.approvalsData = data;
+        this.dataMap['approvals'] = data;
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Could not load inventory. Is the backend running?', life: 5000 });
+      }
+    });
+  }
+
+  selectMenu(key: string): void {debugger;
     this.selectedMenu = key;
+    if(key=="approvals"){
+         this.loadApprovals();
+    }
     this.clearFilters();
     this.navOpen = false;
   }
@@ -240,7 +262,11 @@ export class HomePageComponent implements OnInit {
     this.categoryFilter = null;
   }
 
-  openEdit(row: any): void {
+  openEdit(row: any): void {debugger;
+    if(this.selectedMenu=="approvals"){
+
+      return;
+    }
     this.selectedRow = { ...row };
     this.isNewRecord = false;
     this.editSidebarVisible = true;
