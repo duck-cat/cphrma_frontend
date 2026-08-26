@@ -13,8 +13,14 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { RippleModule } from 'primeng/ripple';
 import { MessageService } from 'primeng/api';
 import { InventoryService } from '../../services/inventory.service';
-import {ApprovalsService} from "../../services/approvals.service";
+import { ApprovalsService } from "../../services/approvals.service";
 import { DialogModule } from 'primeng/dialog';
+import { ApprovalDialogComponent } from "../approval-dialog/approval-dialog.component";
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { CalendarModule } from 'primeng/calendar';
+import {SettingComponent} from "../setting/setting.component";
+
+import {menuItems,orderStatusOptions,approvalStatusOptions,priorityOptions,columnsMap} from "./home-page.config";
 interface NavMenuItem {
   label: string;
   icon: string;
@@ -26,6 +32,8 @@ interface NavMenuItem {
   selector: 'app-home-page',
   standalone: true,
   imports: [
+    SettingComponent,
+    ApprovalDialogComponent,
     DialogModule,
     CommonModule,
     FormsModule,
@@ -39,8 +47,9 @@ interface NavMenuItem {
     ToastModule,
     InputNumberModule,
     RippleModule,
+    CalendarModule
   ],
-  providers: [MessageService],
+  providers: [MessageService, DialogService],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',
 })
@@ -54,33 +63,15 @@ export class HomePageComponent implements OnInit {
   statusFilter: string | null = null;
   categoryFilter: string | null = null;
   loading = false;
+  medType:any[]=[];
 
-  menuItems: NavMenuItem[] = [
-    { label: 'Inventory', icon: 'pi pi-box', key: 'inventory' },
-    { label: 'Orders', icon: 'pi pi-shopping-cart', key: 'orders', badge: 6 },
-    { label: 'Approvals', icon: 'pi pi-check-circle', key: 'approvals', badge: 3 },
-    { label: 'Settings', icon: 'pi pi-cog', key: 'settings' },
-  ];
+  menuItems: NavMenuItem[] = [];
 
-  orderStatusOptions = [
-    { label: 'Pending', value: 'Pending' },
-    { label: 'Processing', value: 'Processing' },
-    { label: 'Shipped', value: 'Shipped' },
-    { label: 'Delivered', value: 'Delivered' },
-    { label: 'Cancelled', value: 'Cancelled' },
-  ];
+  orderStatusOptions = [];
 
-  priorityOptions = [
-    { label: 'High', value: 'High' },
-    { label: 'Medium', value: 'Medium' },
-    { label: 'Low', value: 'Low' },
-  ];
+  priorityOptions:any[]= [];
 
-  approvalStatusOptions = [
-    { label: 'Pending', value: 'Pending' },
-    { label: 'Approved', value: 'Approved' },
-    { label: 'Rejected', value: 'Rejected' },
-  ];
+  approvalStatusOptions:any[] = [];
 
   inventoryData: any[] = [];
 
@@ -109,39 +100,7 @@ export class HomePageComponent implements OnInit {
     { id: 5, setting: 'Approval reminder interval', value: '24 hours', category: 'Approvals', description: 'Remind approvers after this interval' },
   ];
 
-  private columnsMap: Record<string, Array<{ field: string; header: string }>> = {
-    inventory: [
-      { field: 'item_number', header: 'Item #' },
-      { field: 'item_name', header: 'Name' },
-      { field: 'quantity', header: 'Qty' },
-      { field: 'price', header: 'Price' },
-      { field: 'location', header: 'Location' },
-      { field: 'expiry_date', header: 'Expiry' },
-    ],
-    orders: [
-      { field: 'id', header: 'Order ID' },
-      { field: 'customer', header: 'Customer' },
-      { field: 'product', header: 'Product' },
-      { field: 'quantity', header: 'Qty' },
-      { field: 'date', header: 'Date' },
-      { field: 'status', header: 'Status' },
-    ],
-    approvals: [
-      { field: 'id', header: 'Request ID' },
-      { field: 'requestedBy', header: 'Requested By' },
-      { field: 'type', header: 'Type' },
-      { field: 'date', header: 'Date' },
-      { field: 'priority', header: 'Priority' },
-      { field: 'status', header: 'Status' },
-    ],
-    settings: [
-      { field: 'id', header: '#' },
-      { field: 'setting', header: 'Setting' },
-      { field: 'value', header: 'Value' },
-      { field: 'category', header: 'Category' },
-      { field: 'description', header: 'Description' },
-    ],
-  };
+  private columnsMap: Record<string, Array<{ field: string; header: string }>> = columnsMap;
 
   private dataMap: Record<string, any[]> = {
     inventory: this.inventoryData,
@@ -171,7 +130,7 @@ export class HomePageComponent implements OnInit {
     if (this.categoryFilter) {
       const field = this.selectedMenu === 'approvals' ? 'type'
         : this.selectedMenu === 'inventory' ? 'location'
-        : 'category';
+          : 'category';
       data = data.filter(row => row[field] === this.categoryFilter);
     }
 
@@ -205,12 +164,16 @@ export class HomePageComponent implements OnInit {
   constructor(
     private messageService: MessageService,
     private inventoryService: InventoryService,
-    private approvalService:ApprovalsService
-  ) {}
+    private approvalService: ApprovalsService,
+    private dialogService: DialogService
+  ) { }
 
   ngOnInit(): void {
     this.loadInventory();
-  
+    this.menuItems=menuItems;
+    this.priorityOptions=priorityOptions;
+    this.approvalStatusOptions=approvalStatusOptions;
+
   }
 
   loadInventory(): void {
@@ -228,8 +191,8 @@ export class HomePageComponent implements OnInit {
     });
   }
 
-  loadApprovals(){
-this.loading = true;
+  loadApprovals() {
+    this.loading = true;
     this.approvalService.getAll().subscribe({
       next: (data) => {
         this.approvalsData = data;
@@ -242,11 +205,21 @@ this.loading = true;
       }
     });
   }
+  openApprovalDialog() {
+    this.dialogService.open(ApprovalDialogComponent, {
+      header: '',
+      width: '600px',
+      modal: true,
+      closable: true
+    });
+  }
 
-  selectMenu(key: string): void {debugger;
+  selectMenu(key: string): void {
+    debugger;
     this.selectedMenu = key;
-    if(key=="approvals"){
-         this.loadApprovals();
+    if (key == "approvals") {
+      this.loadApprovals();
+
     }
     this.clearFilters();
     this.navOpen = false;
@@ -262,9 +235,10 @@ this.loading = true;
     this.categoryFilter = null;
   }
 
-  openEdit(row: any): void {debugger;
-    if(this.selectedMenu=="approvals"){
-
+  openEdit(row: any): void {
+    debugger;
+    if (this.selectedMenu == "approvals") {
+       this.openApprovalDialog();
       return;
     }
     this.selectedRow = { ...row };
@@ -275,13 +249,15 @@ this.loading = true;
   openAddNew(): void {
     if (this.selectedMenu === 'inventory') {
       this.selectedRow = {
-        item_number: '',
+        hsn_number: '',
+        batch_number:'',
         item_name: '',
         item_description: '',
+        type:'',
         quantity: 0,
         mfg_date: '',
         expiry_date: '',
-        entry_date: new Date().toISOString().split('T')[0],
+        purchage_date: new Date().toISOString().split('T')[0],
         location: '',
         supplier_name: '',
         supplier_details: '',

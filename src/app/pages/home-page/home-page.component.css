@@ -297,11 +297,15 @@
 }
 
 .field input,
-.field textarea {
+.field textarea,
+ .p-dropdown {
   width: 100%;
   box-sizing: border-box;
 }
-
+.p-dropdown {
+   width: 100%;
+  box-sizing: border-box;
+}
 .sidebar-ftr {
   display: flex;
   gap: 0.75rem;
@@ -474,4 +478,13 @@
   :host ::ng-deep .edit-sidebar .p-sidebar {
     width: 100% !important;
   }
+}
+
+.small-calendar .p-datepicker {
+  font-size: 12px;
+}
+
+.small-calendar .p-datepicker td,
+.small-calendar .p-datepicker th {
+  padding: 4px !important;
 }

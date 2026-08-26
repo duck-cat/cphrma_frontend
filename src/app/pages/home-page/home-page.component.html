@@ -33,7 +33,8 @@
 
   <!-- ── Main Content ── -->
   <main class="main-content">
-
+     
+   
     <!-- Top Bar -->
     <header class="top-bar">
       <div class="top-bar-left">
@@ -51,8 +52,11 @@
     </header>
 
     <div class="content-body">
-
-      <!-- ── Filter Bar ── -->
+     @if(selectedMenu=="settings"){
+     <app-setting></app-setting>
+    }
+    @else{
+         <!-- ── Filter Bar ── -->
       <div class="filter-bar">
         <div class="filter-left">
           <span class="p-input-icon-left">
@@ -162,6 +166,8 @@
 
         </p-table>
       </div>
+    }
+     
 
     </div>
   </main>
@@ -186,8 +192,12 @@
     <!-- INVENTORY -->
     <ng-container *ngIf="selectedMenu === 'inventory'">
       <div class="field">
-        <label>Item Number</label>
-        <input pInputText [(ngModel)]="selectedRow.item_number" class="w-full" />
+        <label>HSN Number</label>
+        <input pInputText [(ngModel)]="selectedRow.hsn_number" class="w-full" />
+      </div>
+      <div class="field">
+        <label>Batch Number</label>
+        <input pInputText [(ngModel)]="selectedRow.batch_number" class="w-full" />
       </div>
       <div class="field">
         <label>Item Name</label>
@@ -214,15 +224,25 @@
       </div>
       <div class="field">
         <label>Mfg Date</label>
-        <input pInputText [(ngModel)]="selectedRow.mfg_date" placeholder="YYYY-MM-DD" class="w-full" />
+        <p-calendar [iconDisplay]="'input'" 
+    [showIcon]="true" size="small" [(ngModel)]="selectedRow.mfg_date" placeholder="YYYY-MM-DD" class="w-full" />
       </div>
-      <div class="field">
+      <div class="field small-calendar">
         <label>Expiry Date</label>
-        <input pInputText [(ngModel)]="selectedRow.expiry_date" placeholder="YYYY-MM-DD" class="w-full" />
+        <p-calendar [iconDisplay]="'input'" 
+    [showIcon]="true" size="small" [(ngModel)]="selectedRow.expiry_date" placeholder="YYYY-MM-DD" class="w-full" />
       </div>
       <div class="field">
-        <label>Entry Date</label>
-        <input pInputText [(ngModel)]="selectedRow.entry_date" placeholder="YYYY-MM-DD" class="w-full" />
+        <label>Purchage Date</label>
+        <p-calendar [iconDisplay]="'input'" 
+    [showIcon]="true" size="small" [(ngModel)]="selectedRow.purchage_date" placeholder="YYYY-MM-DD" class="w-full" />
+      </div>
+      <div class="field">
+        <label>Type:</label>
+       <p-dropdown 
+    [(ngModel)]="medType" 
+    optionLabel="name" 
+    placeholder="Select" />
       </div>
       <div class="field">
         <label>Supplier Name</label>
