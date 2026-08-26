@@ -1,0 +1,10 @@
+<div class="card flex justify-content-center container">
+    @for( menu of menus; track menu.key){
+          <p-card [header]="" class="setting-card">
+        <i [class]="menu.icon"> </i> &nbsp;
+        <span>{{menu.label}}</span>
+    </p-card>
+    <br>
+    }
+    
+</div>
