@@ -1,8 +1,11 @@
 <!-- Mobile backdrop -->
-<div class="nav-backdrop" [class.visible]="navOpen" (click)="navOpen = false"></div>
+<div
+  class="nav-backdrop"
+  [class.visible]="navOpen"
+  (click)="navOpen = false"
+></div>
 
 <div class="layout">
-
   <!-- ── Left Navigation ── -->
   <nav class="side-nav" [class.open]="navOpen">
     <div class="nav-brand">
@@ -11,14 +14,19 @@
     </div>
 
     <ul class="nav-list">
-      <li *ngFor="let item of menuItems"
-          class="nav-item"
-          [class.active]="selectedMenu === item.key"
-          (click)="selectMenu(item.key)">
+      <li
+        *ngFor="let item of menuItems"
+        class="nav-item"
+        [class.active]="selectedMenu === item.key"
+        (click)="selectMenu(item.key)"
+      >
         <i [class]="item.icon"></i>
         <span class="nav-label">{{ item.label }}</span>
-        <span *ngIf="item.key === 'inventory' ? inventoryData.length : item.badge" class="nav-badge">
-          {{ item.key === 'inventory' ? inventoryData.length : item.badge }}
+        <span
+          *ngIf="item.key === 'inventory' ? inventoryData.length : item.badge"
+          class="nav-badge"
+        >
+          {{ item.key === "inventory" ? inventoryData.length : item.badge }}
         </span>
       </li>
     </ul>
@@ -33,142 +41,43 @@
 
   <!-- ── Main Content ── -->
   <main class="main-content">
-     
-   
     <!-- Top Bar -->
     <header class="top-bar">
       <div class="top-bar-left">
-        <button class="hamburger" (click)="toggleNav()" aria-label="Toggle navigation">
+        <button
+          class="hamburger"
+          (click)="toggleNav()"
+          aria-label="Toggle navigation"
+        >
           <i class="pi pi-bars"></i>
         </button>
         <h1 class="page-title">{{ currentMenuLabel }}</h1>
         <span class="record-count">{{ tableData.length }} records</span>
       </div>
       <div class="top-bar-right">
-        <button pButton pRipple icon="pi pi-plus" label="Add New" class="p-button-sm"
+        <button
+          pButton
+          pRipple
+          icon="pi pi-plus"
+          label="Add New"
+          class="p-button-sm"
           [disabled]="selectedMenu !== 'inventory'"
-          (click)="openAddNew()"></button>
+          (click)="openAddNewDialog()"
+        ></button>
       </div>
     </header>
 
     <div class="content-body">
-     @if(selectedMenu=="settings"){
-     <app-setting></app-setting>
-    }
-    @else{
-         <!-- ── Filter Bar ── -->
-      <div class="filter-bar">
-        <div class="filter-left">
-          <span class="p-input-icon-left">
-            <i class="pi pi-search"></i>
-            <input pInputText
-              [(ngModel)]="searchText"
-              placeholder="Search {{ currentMenuLabel }}..."
-              class="search-input" />
-          </span>
+      @if (selectedMenu == "settings") {
+        <app-setting></app-setting>
+      } @else {
+        <!-- ── Filter Bar ── -->
+
+        <!-- ── Data Table ── -->
+        <div class="table-wrap">
+          <app-common-table></app-common-table>
         </div>
-        <div class="filter-right">
-          <p-dropdown
-            *ngIf="currentStatusOptions.length"
-            [options]="currentStatusOptions"
-            [(ngModel)]="statusFilter"
-            optionLabel="label"
-            optionValue="value"
-            placeholder="All Statuses"
-            [showClear]="true"
-            styleClass="filter-dropdown">
-          </p-dropdown>
-
-          <p-dropdown
-            *ngIf="currentCategoryOptions.length"
-            [options]="currentCategoryOptions"
-            [(ngModel)]="categoryFilter"
-            optionLabel="label"
-            optionValue="value"
-            [placeholder]="selectedMenu === 'approvals' ? 'All Types' : selectedMenu === 'inventory' ? 'All Locations' : 'All Categories'"
-            [showClear]="true"
-            styleClass="filter-dropdown">
-          </p-dropdown>
-
-          <button pButton pRipple
-            icon="pi pi-filter-slash"
-            label="Clear"
-            class="p-button-outlined p-button-secondary p-button-sm"
-            (click)="clearFilters()">
-          </button>
-        </div>
-      </div>
-
-      <!-- ── Data Table ── -->
-      <div class="table-wrap">
-        <p-table
-          [value]="tableData"
-          [columns]="tableColumns"
-          [paginator]="true"
-          [rows]="8"
-          [rowHover]="true"
-          [loading]="loading && selectedMenu === 'inventory'"
-          styleClass="p-datatable-sm p-datatable-striped"
-          responsiveLayout="scroll">
-
-          <ng-template pTemplate="header" let-columns>
-            <tr>
-              <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-                {{ col.header }}
-                <p-sortIcon [field]="col.field"></p-sortIcon>
-              </th>
-              <th style="width: 56px"></th>
-            </tr>
-          </ng-template>
-
-          <ng-template pTemplate="body" let-row let-columns="columns">
-            <tr class="data-row" (click)="openEdit(row)">
-              <td *ngFor="let col of columns">
-                <ng-container [ngSwitch]="col.field">
-
-                  <ng-container *ngSwitchCase="'status'">
-                    <p-tag [value]="row.status" [severity]="statusSeverity(row.status)"></p-tag>
-                  </ng-container>
-
-                  <ng-container *ngSwitchCase="'priority'">
-                    <p-tag [value]="row.priority" [severity]="statusSeverity(row.priority)"></p-tag>
-                  </ng-container>
-
-                  <ng-container *ngSwitchCase="'price'">
-                    ${{ row.price | number:'1.2-2' }}
-                  </ng-container>
-
-                  <ng-container *ngSwitchDefault>
-                    {{ row[col.field] }}
-                  </ng-container>
-
-                </ng-container>
-              </td>
-              <td>
-                <button pButton pRipple icon="pi pi-pencil"
-                  class="p-button-rounded p-button-text p-button-sm p-button-secondary"
-                  (click)="openEdit(row); $event.stopPropagation()">
-                </button>
-              </td>
-            </tr>
-          </ng-template>
-
-          <ng-template pTemplate="emptymessage" let-columns>
-            <tr>
-              <td [attr.colspan]="tableColumns.length + 1" class="empty-cell">
-                <div class="empty-state">
-                  <i class="pi pi-inbox"></i>
-                  <p>No records found</p>
-                </div>
-              </td>
-            </tr>
-          </ng-template>
-
-        </p-table>
-      </div>
-    }
-     
-
+      }
     </div>
   </main>
 </div>
@@ -178,8 +87,8 @@
   [(visible)]="editSidebarVisible"
   position="right"
   [style]="{ width: '420px' }"
-  styleClass="edit-sidebar">
-
+  styleClass="edit-sidebar"
+>
   <ng-template pTemplate="header">
     <div class="sidebar-hdr">
       <i class="pi pi-pencil"></i>
@@ -188,7 +97,6 @@
   </ng-template>
 
   <div class="edit-form" *ngIf="selectedRow">
-
     <!-- INVENTORY -->
     <ng-container *ngIf="selectedMenu === 'inventory'">
       <div class="field">
@@ -197,7 +105,11 @@
       </div>
       <div class="field">
         <label>Batch Number</label>
-        <input pInputText [(ngModel)]="selectedRow.batch_number" class="w-full" />
+        <input
+          pInputText
+          [(ngModel)]="selectedRow.batch_number"
+          class="w-full"
+        />
       </div>
       <div class="field">
         <label>Item Name</label>
@@ -205,18 +117,31 @@
       </div>
       <div class="field">
         <label>Description</label>
-        <textarea pInputTextarea [(ngModel)]="selectedRow.item_description" rows="3" class="w-full"></textarea>
+        <textarea
+          pInputTextarea
+          [(ngModel)]="selectedRow.item_description"
+          rows="3"
+          class="w-full"
+        ></textarea>
       </div>
       <div class="field">
         <label>Quantity</label>
-        <p-inputNumber [(ngModel)]="selectedRow.quantity" [showButtons]="true" [min]="0"
-          [style]="{width:'100%'}"></p-inputNumber>
+        <p-inputNumber
+          [(ngModel)]="selectedRow.quantity"
+          [showButtons]="true"
+          [min]="0"
+          [style]="{ width: '100%' }"
+        ></p-inputNumber>
       </div>
       <div class="field">
         <label>Price</label>
-        <p-inputNumber [(ngModel)]="selectedRow.price" mode="decimal"
-          [minFractionDigits]="2" [maxFractionDigits]="2"
-          [style]="{width:'100%'}"></p-inputNumber>
+        <p-inputNumber
+          [(ngModel)]="selectedRow.price"
+          mode="decimal"
+          [minFractionDigits]="2"
+          [maxFractionDigits]="2"
+          [style]="{ width: '100%' }"
+        ></p-inputNumber>
       </div>
       <div class="field">
         <label>Location</label>
@@ -224,33 +149,61 @@
       </div>
       <div class="field">
         <label>Mfg Date</label>
-        <p-calendar [iconDisplay]="'input'" 
-    [showIcon]="true" size="small" [(ngModel)]="selectedRow.mfg_date" placeholder="YYYY-MM-DD" class="w-full" />
+        <p-calendar
+          [iconDisplay]="'input'"
+          [showIcon]="true"
+          size="small"
+          [(ngModel)]="selectedRow.mfg_date"
+          placeholder="YYYY-MM-DD"
+          class="w-full"
+        />
       </div>
       <div class="field small-calendar">
         <label>Expiry Date</label>
-        <p-calendar [iconDisplay]="'input'" 
-    [showIcon]="true" size="small" [(ngModel)]="selectedRow.expiry_date" placeholder="YYYY-MM-DD" class="w-full" />
+        <p-calendar
+          [iconDisplay]="'input'"
+          [showIcon]="true"
+          size="small"
+          [(ngModel)]="selectedRow.expiry_date"
+          placeholder="YYYY-MM-DD"
+          class="w-full"
+        />
       </div>
       <div class="field">
         <label>Purchage Date</label>
-        <p-calendar [iconDisplay]="'input'" 
-    [showIcon]="true" size="small" [(ngModel)]="selectedRow.purchage_date" placeholder="YYYY-MM-DD" class="w-full" />
+        <p-calendar
+          [iconDisplay]="'input'"
+          [showIcon]="true"
+          size="small"
+          [(ngModel)]="selectedRow.purchage_date"
+          placeholder="YYYY-MM-DD"
+          class="w-full"
+        />
       </div>
       <div class="field">
         <label>Type:</label>
-       <p-dropdown 
-    [(ngModel)]="medType" 
-    optionLabel="name" 
-    placeholder="Select" />
+        <p-dropdown
+          [(ngModel)]="medType"
+          optionLabel="name"
+          placeholder="Select"
+        />
       </div>
       <div class="field">
         <label>Supplier Name</label>
-        <input pInputText [(ngModel)]="selectedRow.supplier_name" class="w-full" />
+        <input
+          pInputText
+          [(ngModel)]="selectedRow.supplier_name"
+          class="w-full"
+        />
       </div>
       <div class="field">
         <label>Supplier Details</label>
-        <textarea pInputTextarea [(ngModel)]="selectedRow.supplier_details" rows="2" class="w-full"></textarea>
+        <textarea
+          pInputTextarea
+          [(ngModel)]="selectedRow.supplier_details"
+          rows="2"
+          class="w-full"
+        ></textarea>
       </div>
     </ng-container>
 
@@ -270,8 +223,12 @@
       </div>
       <div class="field">
         <label>Quantity</label>
-        <p-inputNumber [(ngModel)]="selectedRow.quantity" [showButtons]="true" [min]="1"
-          [style]="{width:'100%'}"></p-inputNumber>
+        <p-inputNumber
+          [(ngModel)]="selectedRow.quantity"
+          [showButtons]="true"
+          [min]="1"
+          [style]="{ width: '100%' }"
+        ></p-inputNumber>
       </div>
       <div class="field">
         <label>Date</label>
@@ -279,8 +236,13 @@
       </div>
       <div class="field">
         <label>Status</label>
-        <p-dropdown [options]="orderStatusOptions" [(ngModel)]="selectedRow.status"
-          optionLabel="label" optionValue="value" [style]="{width:'100%'}"></p-dropdown>
+        <p-dropdown
+          [options]="orderStatusOptions"
+          [(ngModel)]="selectedRow.status"
+          optionLabel="label"
+          optionValue="value"
+          [style]="{ width: '100%' }"
+        ></p-dropdown>
       </div>
     </ng-container>
 
@@ -292,7 +254,11 @@
       </div>
       <div class="field">
         <label>Requested By</label>
-        <input pInputText [(ngModel)]="selectedRow.requestedBy" class="w-full" />
+        <input
+          pInputText
+          [(ngModel)]="selectedRow.requestedBy"
+          class="w-full"
+        />
       </div>
       <div class="field">
         <label>Type</label>
@@ -304,13 +270,23 @@
       </div>
       <div class="field">
         <label>Priority</label>
-        <p-dropdown [options]="priorityOptions" [(ngModel)]="selectedRow.priority"
-          optionLabel="label" optionValue="value" [style]="{width:'100%'}"></p-dropdown>
+        <p-dropdown
+          [options]="priorityOptions"
+          [(ngModel)]="selectedRow.priority"
+          optionLabel="label"
+          optionValue="value"
+          [style]="{ width: '100%' }"
+        ></p-dropdown>
       </div>
       <div class="field">
         <label>Status</label>
-        <p-dropdown [options]="approvalStatusOptions" [(ngModel)]="selectedRow.status"
-          optionLabel="label" optionValue="value" [style]="{width:'100%'}"></p-dropdown>
+        <p-dropdown
+          [options]="approvalStatusOptions"
+          [(ngModel)]="selectedRow.status"
+          optionLabel="label"
+          optionValue="value"
+          [style]="{ width: '100%' }"
+        ></p-dropdown>
       </div>
     </ng-container>
 
@@ -318,7 +294,12 @@
     <ng-container *ngIf="selectedMenu === 'settings'">
       <div class="field">
         <label>Setting</label>
-        <input pInputText [ngModel]="selectedRow.setting" disabled class="w-full" />
+        <input
+          pInputText
+          [ngModel]="selectedRow.setting"
+          disabled
+          class="w-full"
+        />
       </div>
       <div class="field">
         <label>Value</label>
@@ -326,33 +307,53 @@
       </div>
       <div class="field">
         <label>Category</label>
-        <input pInputText [ngModel]="selectedRow.category" disabled class="w-full" />
+        <input
+          pInputText
+          [ngModel]="selectedRow.category"
+          disabled
+          class="w-full"
+        />
       </div>
       <div class="field">
         <label>Description</label>
-        <textarea pInputTextarea [(ngModel)]="selectedRow.description" rows="4" class="w-full"></textarea>
+        <textarea
+          pInputTextarea
+          [(ngModel)]="selectedRow.description"
+          rows="4"
+          class="w-full"
+        ></textarea>
       </div>
     </ng-container>
-
   </div>
 
   <ng-template pTemplate="footer">
     <div class="sidebar-ftr">
-      <button pButton pRipple label="Cancel" icon="pi pi-times"
+      <button
+        pButton
+        pRipple
+        label="Cancel"
+        icon="pi pi-times"
         class="p-button-outlined p-button-secondary"
-        (click)="editSidebarVisible = false">
-      </button>
-      <button pButton pRipple label="Delete" icon="pi pi-trash"
+        (click)="editSidebarVisible = false"
+      ></button>
+      <button
+        pButton
+        pRipple
+        label="Delete"
+        icon="pi pi-trash"
         class="p-button-outlined p-button-danger"
         *ngIf="selectedMenu === 'inventory' && !isNewRecord"
-        (click)="deleteRow()">
-      </button>
-      <button pButton pRipple [label]="isNewRecord ? 'Create' : 'Save Changes'" icon="pi pi-check"
-        (click)="saveRow()">
-      </button>
+        (click)="deleteRow()"
+      ></button>
+      <button
+        pButton
+        pRipple
+        [label]="isNewRecord ? 'Create' : 'Save Changes'"
+        icon="pi pi-check"
+        (click)="saveRow()"
+      ></button>
     </div>
   </ng-template>
-
 </p-sidebar>
 
 <p-toast position="bottom-right"></p-toast>

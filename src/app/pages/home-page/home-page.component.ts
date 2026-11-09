@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SidebarModule } from 'primeng/sidebar';
@@ -19,8 +19,11 @@ import { ApprovalDialogComponent } from "../approval-dialog/approval-dialog.comp
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { CalendarModule } from 'primeng/calendar';
 import {SettingComponent} from "../setting/setting.component";
-
+import {CommonTableComponent} from "../../components/common-table/common-table.component";
+import {CommonTableService} from "../../components/common-table/common-table.service"
 import {menuItems,orderStatusOptions,approvalStatusOptions,priorityOptions,columnsMap} from "./home-page.config";
+import {CommonDialogComponent} from "../../components/common-dialog/common-dialog.component";
+
 interface NavMenuItem {
   label: string;
   icon: string;
@@ -32,6 +35,8 @@ interface NavMenuItem {
   selector: 'app-home-page',
   standalone: true,
   imports: [
+    CommonDialogComponent,
+    CommonTableComponent,
     SettingComponent,
     ApprovalDialogComponent,
     DialogModule,
@@ -53,7 +58,7 @@ interface NavMenuItem {
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',
 })
-export class HomePageComponent implements OnInit {
+export class HomePageComponent implements OnInit,AfterViewInit {
   selectedMenu = 'inventory';
   editSidebarVisible = false;
   selectedRow: any = null;
@@ -74,7 +79,7 @@ export class HomePageComponent implements OnInit {
   approvalStatusOptions:any[] = [];
 
   inventoryData: any[] = [];
-
+  dialogRef:any=null;
   ordersData: any[] = [
     { id: 'ORD-001', customer: 'Acme Corp', product: 'Steel Rod 10mm', quantity: 100, date: '2026-07-15', status: 'Delivered' },
     { id: 'ORD-002', customer: 'TechBuild Ltd', product: 'Aluminum Sheet', quantity: 50, date: '2026-07-20', status: 'Processing' },
@@ -100,7 +105,8 @@ export class HomePageComponent implements OnInit {
     { id: 5, setting: 'Approval reminder interval', value: '24 hours', category: 'Approvals', description: 'Remind approvers after this interval' },
   ];
 
-  private columnsMap: Record<string, Array<{ field: string; header: string }>> = columnsMap;
+  ///constructor(){}
+  private columnsMap: Record<string, Array<{ field: string; title: string }>> = columnsMap;
 
   private dataMap: Record<string, any[]> = {
     inventory: this.inventoryData,
@@ -165,17 +171,30 @@ export class HomePageComponent implements OnInit {
     private messageService: MessageService,
     private inventoryService: InventoryService,
     private approvalService: ApprovalsService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private dataTransfer:CommonTableService
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void {debugger;
     this.loadInventory();
     this.menuItems=menuItems;
     this.priorityOptions=priorityOptions;
     this.approvalStatusOptions=approvalStatusOptions;
-
+    
   }
-
+  ngAfterViewInit(): void {
+     this.resetTableAsPerMenu();
+  }
+  resetTableAsPerMenu(){
+     try{
+     this.dataTransfer.setColumnData(this.tableColumns);
+     setTimeout(()=>{
+        this.dataTransfer.setGridData(this.tableData);
+     })
+     }catch(e){
+      console.error(e);
+     }
+  }
   loadInventory(): void {
     this.loading = true;
     this.inventoryService.getAll().subscribe({
@@ -183,6 +202,7 @@ export class HomePageComponent implements OnInit {
         this.inventoryData = data;
         this.dataMap['inventory'] = data;
         this.loading = false;
+        this.resetTableAsPerMenu();
       },
       error: () => {
         this.loading = false;
@@ -223,6 +243,7 @@ export class HomePageComponent implements OnInit {
     }
     this.clearFilters();
     this.navOpen = false;
+    this.resetTableAsPerMenu();
   }
 
   toggleNav(): void {
@@ -267,6 +288,43 @@ export class HomePageComponent implements OnInit {
       this.isNewRecord = true;
       this.editSidebarVisible = true;
     }
+  }
+  openAddNewDialog(){
+      this.dialogRef = this.dialogService.open(
+      CommonDialogComponent,
+      {
+        header: 'Add Inventory',
+
+        width: '650px',
+
+        modal: true,
+
+        closable: true,
+
+        draggable: true,
+
+        breakpoints: {
+          '960px': '80vw',
+          '640px': '95vw'
+        },
+
+        data: {
+
+          title: 'Employee Details',
+
+          fields: this.columnsMap['inventory'],
+
+          layout: 'grid',
+
+          columns: 2,
+
+          initialValue: {
+
+          }
+
+        }
+      }
+    );
   }
 
   saveRow(): void {

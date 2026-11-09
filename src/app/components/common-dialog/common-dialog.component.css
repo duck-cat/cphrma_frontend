@@ -1,0 +1,74 @@
+.dialog-content {
+  background: #ffffff;
+  padding: 1.25rem;
+  color: #334155;
+  font-family: inherit;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+}
+
+/* Dialog footer */
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+/* Common button styling */
+:host ::ng-deep .dialog-footer .p-button {
+  min-width: 110px;
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 0.65rem 1.1rem;
+  transition: all 0.2s ease;
+}
+
+/* Cancel button */
+:host ::ng-deep .dialog-footer .p-button-secondary {
+  color: #475569;
+  border-color: #cbd5e1;
+  background: #ffffff;
+}
+
+:host ::ng-deep .dialog-footer .p-button-secondary:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  color: #1e293b;
+}
+
+/* Submit button */
+:host ::ng-deep .dialog-footer .p-button:not(.p-button-secondary) {
+  background: #63e6be;
+  border-color: #63e6be;
+  color: #064e3b;
+}
+
+:host ::ng-deep .dialog-footer .p-button:not(.p-button-secondary):hover {
+  background: #43d9aa;
+  border-color: #43d9aa;
+  color: #064e3b;
+}
+
+:host ::ng-deep .dialog-footer .p-button:focus-visible {
+  outline: 3px solid rgba(99, 230, 190, 0.3);
+  outline-offset: 2px;
+}
+
+/* Responsive footer */
+@media (max-width: 480px) {
+  .dialog-footer {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  :host ::ng-deep .dialog-footer .p-button {
+    width: 100%;
+  }
+}

@@ -1,0 +1,183 @@
+
+<form
+  *ngIf="form"
+  [formGroup]="form"
+  class="dynamic-form"
+  [class.grid-layout]="layout === 'grid'"
+  [style.--form-columns]="columns">
+
+  <div
+    *ngFor="let field of fields"
+    class="dynamic-field">
+
+    <label class="field-label"
+           [for]="field.field">
+
+      {{ field.title }}
+
+      <span *ngIf="field.required" class="required">*</span>
+
+    </label>
+
+    <ng-container [ngSwitch]="field.type">
+
+      <!-- TEXT -->
+      <input
+        *ngSwitchCase="'text'"
+        pInputText
+        [id]="field.field"
+        [formControlName]="field.field"
+        [placeholder]="field.placeholder || field.title"
+        [maxlength]="field.maxLength || null"
+        class="w-full"
+      />
+     <!--Barcode-->
+
+     <app-barcode-scanner *ngSwitchCase="'barcode'" (scanned)="barcodeInfo($event)"></app-barcode-scanner>
+
+      <!-- PASSWORD -->
+      <p-password
+        *ngSwitchCase="'password'"
+        [inputId]="field.field"
+        [formControlName]="field.field"
+        [placeholder]="field.placeholder || field.title"
+        [toggleMask]="true"
+        [feedback]="false"
+        styleClass="w-full"
+        inputStyleClass="w-full"
+      />
+
+      <!-- DROPDOWN -->
+      <p-dropdown
+        *ngSwitchCase="'dropdown'"
+        [inputId]="field.field"
+        [options]="getOptions(field)"
+        optionLabel="label"
+        optionValue="value"
+        [formControlName]="field.field"
+        [placeholder]="field.placeholder || 'Select ' + field.title"
+        [showClear]="true"
+        styleClass="w-full"
+      />
+
+      <!-- RADIO -->
+      <div
+        *ngSwitchCase="'radio'"
+        class="radio-group">
+
+        <div
+          *ngFor="let option of getOptions(field); let i = index"
+          class="radio-option">
+
+          <p-radioButton
+            [inputId]="field.field + '_' + i"
+            [value]="option.value"
+            [formControlName]="field.field"
+            [disabled]="option.disabled"
+          />
+
+          <label [for]="field.field + '_' + i">
+            {{ option.label }}
+          </label>
+
+        </div>
+
+      </div>
+
+      <!-- CHECKBOX GROUP -->
+      <div
+        *ngSwitchCase="'checkbox'"
+        class="checkbox-group">
+
+        <div
+          *ngFor="let option of getOptions(field); let i = index"
+          class="checkbox-option">
+
+          <p-checkbox
+            [inputId]="field.field + '_' + i"
+            [value]="option.value"
+            [formControlName]="field.field"
+            [disabled]="option.disabled"
+          />
+
+          <label [for]="field.field + '_' + i">
+            {{ option.label }}
+          </label>
+
+        </div>
+
+      </div>
+
+      <!-- SINGLE CHECKBOX -->
+      <div
+        *ngSwitchCase="'checkbox-single'"
+        class="checkbox-option">
+
+        <p-checkbox
+          [inputId]="field.field"
+          [binary]="true"
+          [formControlName]="field.field"
+        />
+
+        <label [for]="field.field">
+          {{ field.placeholder || field.title }}
+        </label>
+
+      </div>
+
+      <!-- DATE PICKER -->
+      <p-calendar
+        *ngSwitchCase="'datepicker'"
+        [inputId]="field.field"
+        [formControlName]="field.field"
+        [placeholder]="field.placeholder || 'Select date'"
+        dateFormat="dd/mm/yy"
+        [showIcon]="true"
+        [showButtonBar]="true"
+        styleClass="w-full"
+         [appendTo]="'self'"
+         
+      />
+
+      <!-- NUMBER -->
+      <p-inputNumber
+        *ngSwitchCase="'number'"
+        [inputId]="field.field"
+        [formControlName]="field.field"
+        [placeholder]="field.placeholder || field.title"
+        [min]="field.min ?? 0"
+        [max]="field.max ?? null"
+        styleClass="w-full"
+      />
+
+      <!-- TEXTAREA -->
+      <textarea
+        *ngSwitchCase="'textarea'"
+        pInputTextarea
+        [id]="field.field"
+        [formControlName]="field.field"
+        [placeholder]="field.placeholder || field.title"
+        [maxlength]="field.maxLength || null"
+        rows="3"
+        class="w-full">
+      </textarea>
+
+    </ng-container>
+
+    <!-- HELP TEXT -->
+    <small *ngIf="field.helpText" class="help-text">
+      {{ field.helpText }}
+    </small>
+
+    <!-- VALIDATION -->
+    <small
+      *ngIf="isInvalid(field.field)"
+      class="error-message">
+
+      {{ getErrorMessage(field) }}
+
+    </small>
+
+  </div>
+
+</form>
