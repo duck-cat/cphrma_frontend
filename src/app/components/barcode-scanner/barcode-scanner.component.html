@@ -1,0 +1,31 @@
+<div class="scanner-container">
+
+  <video
+    #videoElement
+    class="scanner-video"
+    autoplay
+    muted
+    playsinline>
+  </video>
+
+  <div class="scanner-actions">
+    <button
+      type="button"
+      *ngIf="!isScanning"
+      (click)="startScanner()">
+      Start Scanner
+    </button>
+
+    <button
+      type="button"
+      *ngIf="isScanning"
+      (click)="stopScanner()">
+      Stop Scanner
+    </button>
+  </div>
+
+  <p class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </p>
+
+</div>

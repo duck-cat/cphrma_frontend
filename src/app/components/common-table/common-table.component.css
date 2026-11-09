@@ -1,0 +1,91 @@
+
+:host ::ng-deep .tabulator {
+  background: #ffffff !important;
+  border: 1px solid #d5f5e9 !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+  color: #164e3b !important;
+  font-size: 14px;
+}
+
+/* Header */
+:host ::ng-deep .tabulator .tabulator-header {
+  background: #63e6be !important;
+  border-bottom: 1px solid #63e6be !important;
+}
+
+:host ::ng-deep .tabulator .tabulator-header .tabulator-col {
+  background: #63e6be !important;
+  color: #164e3b !important;
+  border-right: 1px solid #a4f2d9 !important;
+}
+
+:host ::ng-deep .tabulator .tabulator-header .tabulator-col-title {
+  color: #164e3b !important;
+  font-weight: 700 !important;
+}
+
+/* Table rows */
+:host ::ng-deep .tabulator .tabulator-row {
+  background: #ffffff !important;
+  border-bottom: 1px solid #e2f5ef !important;
+  min-height: 48px;
+}
+
+/* Alternate rows */
+:host ::ng-deep .tabulator .tabulator-row:nth-child(even) {
+  background: #f4fffa !important;
+}
+
+/* Hover */
+:host ::ng-deep .tabulator .tabulator-row:hover {
+  background: #dffff3 !important;
+}
+
+/* Cells */
+:host ::ng-deep .tabulator .tabulator-cell {
+  color: #164e3b !important;
+  border-right: 1px solid #edf5f2 !important;
+  padding: 12px !important;
+}
+
+/* Footer */
+:host ::ng-deep .tabulator .tabulator-footer {
+  background: #ffffff !important;
+  border-top: 1px solid #63e6be !important;
+}
+
+/* Pagination */
+:host ::ng-deep .tabulator .tabulator-footer .tabulator-page {
+  background: #ffffff !important;
+  border: 1px solid #d5f5e9 !important;
+  color: #164e3b !important;
+  border-radius: 6px !important;
+}
+
+:host ::ng-deep .tabulator .tabulator-footer .tabulator-page.active {
+  background: #63e6be !important;
+  border-color: #63e6be !important;
+  color: #164e3b !important;
+  font-weight: 600;
+}
+
+/* Selected row */
+:host ::ng-deep .tabulator .tabulator-row.tabulator-selected {
+  background: #c9fbea !important;
+}
+
+
+:host ::ng-deep .action-menu-icon {
+  cursor: pointer;
+  font-size: 18px;
+  color: #64748b;
+}
+
+:host ::ng-deep .action-menu-icon:hover {
+  color: #2563eb;
+}
+
+:host ::ng-deep .p-menu {
+  z-index: 99999 !important;
+}
