@@ -24,7 +24,7 @@ export class CommonDialogComponent {
 
   layout: 'vertical' | 'grid' = 'grid';
 
-  columns = 2;
+  columns = 3;
 
   form = new FormGroup({
     dynamicForm: new FormControl<any>({})

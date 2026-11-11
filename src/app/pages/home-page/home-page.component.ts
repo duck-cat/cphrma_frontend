@@ -201,6 +201,7 @@ export class HomePageComponent implements OnInit,AfterViewInit {
       next: (data) => {
         this.inventoryData = data;
         this.dataMap['inventory'] = data;
+        this.dataTransfer.setGridData( this.dataMap['inventory']);
         this.loading = false;
         this.resetTableAsPerMenu();
       },
@@ -295,7 +296,7 @@ export class HomePageComponent implements OnInit,AfterViewInit {
       {
         header: 'Add Inventory',
 
-        width: '650px',
+        width: '70%',
 
         modal: true,
 
@@ -326,7 +327,16 @@ export class HomePageComponent implements OnInit,AfterViewInit {
       }
     );
   }
-
+  triggerAction(eventType:any){
+    try{
+    debugger;
+    if(eventType.type=="edit"){
+      
+    }
+    }catch(e){
+      console.error(e);
+    }
+  }
   saveRow(): void {
     if (this.selectedMenu === 'inventory') {
       const { _rowIndex, ...payload } = this.selectedRow;
