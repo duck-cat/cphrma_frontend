@@ -1,31 +1,28 @@
 <div class="scanner-container">
+  <div class="row">
+    <div class="col-md-6">
+      <video
+        #videoElement
+        class="scanner-video"
+        autoplay
+        muted
+        playsinline
+      ></video>
+    </div>
+    <div class="col-md-6">
+      <div class="scanner-actions">
+        <button type="button" *ngIf="!isScanning" (click)="startScanner()">
+          Start Scanner
+        </button>
 
-  <video
-    #videoElement
-    class="scanner-video"
-    autoplay
-    muted
-    playsinline>
-  </video>
-
-  <div class="scanner-actions">
-    <button
-      type="button"
-      *ngIf="!isScanning"
-      (click)="startScanner()">
-      Start Scanner
-    </button>
-
-    <button
-      type="button"
-      *ngIf="isScanning"
-      (click)="stopScanner()">
-      Stop Scanner
-    </button>
+        <button type="button" *ngIf="isScanning" (click)="stopScanner()">
+          Stop Scanner
+        </button>
+      </div>
+    </div>
   </div>
 
   <p class="error-message" *ngIf="errorMessage">
     {{ errorMessage }}
   </p>
-
 </div>

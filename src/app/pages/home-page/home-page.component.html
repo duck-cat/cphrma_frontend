@@ -61,7 +61,6 @@
           icon="pi pi-plus"
           label="Add New"
           class="p-button-sm"
-          [disabled]="selectedMenu !== 'inventory'"
           (click)="openAddNewDialog()"
         ></button>
       </div>
@@ -75,7 +74,7 @@
 
         <!-- ── Data Table ── -->
         <div class="table-wrap">
-          <app-common-table></app-common-table>
+          <app-common-table (eventTrigger)="triggerAction($event)"></app-common-table>
         </div>
       }
     </div>

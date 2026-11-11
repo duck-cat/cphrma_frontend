@@ -71,7 +71,7 @@ export class CommonFormComponent implements ControlValueAccessor, OnChanges, OnD
 
   @Input() layout: 'vertical' | 'grid' = 'vertical';
 
-  @Input() columns = 2;
+  @Input() columns = 3;
   @Output() scanned=new EventEmitter<any>();
 
   form!: FormGroup;

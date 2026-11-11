@@ -84,4 +84,12 @@
       { field: 'category', title: 'Category' },
       { field: 'description', title: 'Description' },
     ],
+    supplier:[
+  { field: 'supplierId', title: 'Supplier ID', required: true, show_tbl: 1,type:"text" },
+  { field: 'supplierName', title: 'Supplier Name', required: true, show_tbl: 1,type:"text" },
+  { field: 'supplierType', title: 'Supplier Type', type: 'dropdown', required: true, show_tbl: 1 },
+  { field: 'mobileNumber', title: 'Mobile Number', type: 'number', required: true, show_tbl: 1 },
+  { field: 'emailAddress', title: 'Email Address', type: 'text', required: true, show_tbl: 1 },
+  { field: 'addressLine', title: 'Address Line', type: 'textarea', required: true, show_tbl: 1 }
+]
   };

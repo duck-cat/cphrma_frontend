@@ -9,6 +9,8 @@ import {
   SimpleChanges,
   OnInit,
   effect,
+  Output,
+  EventEmitter
 } from '@angular/core';
 
 import { TabulatorFull as Tabulator } from 'tabulator-tables';
@@ -30,6 +32,7 @@ export class CommonTableComponent implements OnInit {
   @ViewChild('actionMenu') actionMenu!: Menu;
   @Input() data: any[] = [];
   @Input() columns: any[] = [];
+  @Output()eventTrigger:any=new EventEmitter<any>();
   appendTarget: HTMLElement | string | null | undefined = 'body';
   private table!: Tabulator;
 
@@ -100,14 +103,26 @@ export class CommonTableComponent implements OnInit {
   selectedRow: any;
   viewRecord(row: any) {
     console.log('View:', row);
+    this.eventTrigger.emit({
+        action:"view",
+        rowData:[row]
+    });
   }
 
   editRecord(row: any) {
     console.log('Edit:', row);
+    this.eventTrigger.emit({
+        action:"edit",
+        rowData:[row]
+    });
   }
 
   deleteRecord(row: any) {
     console.log('Delete:', row);
+    this.eventTrigger.emit({
+        action:"delete",
+        rowData:[row]
+    });
   }
   actionItems: MenuItem[] = [
     {
