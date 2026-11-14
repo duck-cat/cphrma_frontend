@@ -248,7 +248,7 @@ export class CommonFormComponent implements ControlValueAccessor, OnChanges, OnD
   getOptions(field: DynamicField) {
 
     return (field.options ?? []).map(item => ({
-      label: item.label,
+      label: item.value,
       value: item.option,
       disabled: item.disabled ?? false
     }));
