@@ -35,6 +35,11 @@ export interface DynamicField {
   maxLength?: number;
 
   helpText?: string;
+  dropdownValue:{
+     option:string,
+     value:string,
+     disabled:boolean
+  }[]
 }
 
 export interface DynamicFormValue {

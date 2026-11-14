@@ -21,7 +21,8 @@ export interface InventoryItem {
 @Injectable({ providedIn: 'root' })
 export class InventoryService {
   private url = `${environment.apiUrl}/inventory`;
-
+ private commonurl = `${environment.apiUrl}/medicines`;
+ private apiurl=`${environment.apiUrl}`;
   constructor(private http: HttpClient) {}
 
   getAll(): Observable<InventoryItem[]> {
@@ -40,5 +41,11 @@ export class InventoryService {
 
   delete(index: number): Observable<any> {
     return this.http.delete(`${this.url}/${index}`);
+  }
+  getAllMedicines(search=""): Observable<any> {
+ return this.http.get(`${this.commonurl}/${search}`);
+  }
+  getSupplierInfo(){
+     return this.http.get(`${this.apiurl}/supplierinfo`);
   }
 }
