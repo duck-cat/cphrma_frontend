@@ -1,1 +1,18 @@
-<p>customer works!</p>
+<section class="customer-page">
+  <header class="customer-heading">
+    <div>
+      <p class="eyebrow">CUSTOMER MANAGEMENT</p>
+      <h2>Customers</h2>
+      <p>Manage customer contact details and membership information.</p>
+    </div>
+    <button class="add-customer-button" type="button" (click)="openCustomerDialog()">
+      <i class="pi pi-plus" aria-hidden="true"></i>
+      Add customer
+    </button>
+  </header>
+
+  <div class="customer-table">
+    <div *ngIf="loading" class="loading-state">Loading customers…</div>
+    <app-common-table (eventTrigger)="handleTableAction($event)"></app-common-table>
+  </div>
+</section>

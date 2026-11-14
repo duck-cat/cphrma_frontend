@@ -358,8 +358,18 @@ export class HomePageComponent implements OnInit, AfterViewInit {
 
   selectMenu(key: string): void {
     debugger;
+    this.selectedMenu = key;
     this.activeMenu = key;
-    if (key == 'approvals') {
+    if (key == 'dashboard') {
+      this.router.navigate([
+        '/home',
+        {
+          outlets: {
+            subpage: ['dashboard'],
+          },
+        },
+      ]);
+    } else if (key == 'approvals') {
       this.router.navigate([
         '/home',
         {
@@ -449,6 +459,10 @@ export class HomePageComponent implements OnInit, AfterViewInit {
     this.eventService.eventSignal.set({type:'supplier'});
    }else if(this.activeMenu=='inventory'){
     this.eventService.eventSignal.set({type:'inventory'});
+   }else if(this.activeMenu=='billing'){
+    this.eventService.eventSignal.set({type:'billing'});
+   }else if(this.activeMenu=='customer'){
+    this.eventService.eventSignal.set({type:'customer'});
    }
   
    /* this.dialogRef = this.dialogService.open(CommonDialogComponent, {

@@ -1,6 +1,7 @@
   
   
   export const menuItems: NavMenuItem[] = [
+    { label: 'Dashboard', icon: 'pi pi-chart-line', key: 'dashboard' },
     { label: 'Inventory', icon: 'pi pi-box', key: 'inventory' },
     { label: 'Orders', icon: 'pi pi-shopping-cart', key: 'orders', badge: 6 },
     { label: 'Customers', icon: 'pi pi-user', key: 'customer', badge: 0 },

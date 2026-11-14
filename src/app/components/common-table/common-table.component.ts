@@ -34,7 +34,8 @@ export class CommonTableComponent implements OnInit {
   @Input() columns: any[] = [];
   @Output()eventTrigger:any=new EventEmitter<any>();
   appendTarget: HTMLElement | string | null | undefined = 'body';
-  private table!: Tabulator;
+  private table?: Tabulator;
+  private tableReady = false;
 
   constructor(private dataTransfer: CommonTableService) {
     effect(() => {
@@ -59,12 +60,39 @@ export class CommonTableComponent implements OnInit {
           }
         },
       };
-      this.columns = [...coloum.filter(res=>res.show_tbl==1), action];
+      this.columns = [
+        ...coloum
+          .filter((res: any) => res.show_tbl == 1)
+          .map(
+            ({
+              show_tbl,
+              type,
+              required,
+              dropdownValue,
+              options,
+              initialValue,
+              placeholder,
+              min,
+              max,
+              minLength,
+              maxLength,
+              disabled,
+              helpText,
+              ...column
+            }: any) => column,
+          ),
+        action,
+      ];
+      if (this.table && this.tableReady) {
+        this.table.setColumns(this.columns);
+      }
     });
     effect(() => {
       let data: any[] = this.dataTransfer.gridData();
       this.data = data;
-      this.initializeTable();
+      if (this.table && this.tableReady) {
+        this.table.replaceData(this.data);
+      }
     });
   }
   ngOnInit(): void {
@@ -75,12 +103,24 @@ export class CommonTableComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['data'] && this.table) {
+    if (changes['data'] && this.table && this.tableReady) {
       this.table.replaceData(this.data);
     }
   }
 
   initializeTable(): void {
+    if (!this.tableContainer?.nativeElement) {
+      return;
+    }
+
+    if (this.table) {
+      if (this.tableReady) {
+        this.table.setColumns(this.columns);
+        this.table.replaceData(this.data);
+      }
+      return;
+    }
+
     this.table = new Tabulator(this.tableContainer.nativeElement, {
       data: this.data,
 
@@ -97,6 +137,11 @@ export class CommonTableComponent implements OnInit {
       //  selectableRows: true,
 
       columns: this.columns,
+    });
+    this.table.on('tableBuilt', () => {
+      this.tableReady = true;
+      this.table?.setColumns(this.columns);
+      this.table?.replaceData(this.data);
     });
   }
 
@@ -152,12 +197,13 @@ export class CommonTableComponent implements OnInit {
   }
 
   exportCSV(): void {
-    this.table.download('csv', 'whatsapp-messages.csv');
+    this.table?.download('csv', 'whatsapp-messages.csv');
   }
 
   ngOnDestroy(): void {
     if (this.table) {
       this.table.destroy();
+      this.tableReady = false;
     }
   }
 }

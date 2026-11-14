@@ -52,10 +52,11 @@
           <i class="pi pi-bars"></i>
         </button>
         <h1 class="page-title">{{ currentMenuLabel }}</h1>
-        <span class="record-count">{{ tableData.length }} records</span>
+        <span *ngIf="selectedMenu !== 'billing' && selectedMenu !== 'dashboard'" class="record-count">{{ tableData.length }} records</span>
       </div>
       <div class="top-bar-right">
         <button
+          *ngIf="selectedMenu !== 'dashboard'"
           pButton
           pRipple
           icon="pi pi-plus"

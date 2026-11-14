@@ -48,8 +48,16 @@ export class CommonDialogComponent implements AfterViewInit {
 
     }
   }
+  ngAfterViewInit(): void {
+
+  }
 
   submit(): void {
+
+    if (this.commonform?.form?.invalid) {
+      this.commonform.markAllAsTouched();
+      return;
+    }
 
     if (this.form.invalid) {
 
@@ -65,9 +73,7 @@ export class CommonDialogComponent implements AfterViewInit {
   }
 
   cancel(): void {
-
-    // Close without returning form data
-    this.ref.close(this?.commonform?.form?.value||{});
+    this.ref.close(null);
   }
 
   get dynamicControl(): FormControl {

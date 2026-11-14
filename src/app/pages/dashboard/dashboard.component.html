@@ -1,0 +1,64 @@
+<div class="dashboard-page">
+  <div class="dashboard-heading">
+    <p class="eyebrow">Overview</p>
+    <h2>Dashboard</h2>
+    <p>Live snapshot of inventory, suppliers, customers, orders and billing.</p>
+  </div>
+
+  <div *ngIf="errorMessage" class="dashboard-error">{{ errorMessage }}</div>
+
+  <!-- KPI tiles -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <span class="kpi-label">Total Inventory</span>
+      <span class="kpi-value">{{ kpis.totalInventory }}</span>
+    </div>
+    <div class="kpi-card kpi-danger">
+      <span class="kpi-label">Expired Items</span>
+      <span class="kpi-value">{{ kpis.expired }}</span>
+    </div>
+    <div class="kpi-card kpi-warning">
+      <span class="kpi-label">Expiring Soon (60d)</span>
+      <span class="kpi-value">{{ kpis.expiringSoon }}</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">Total Suppliers</span>
+      <span class="kpi-value">{{ kpis.totalSuppliers }}</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">Total Customers</span>
+      <span class="kpi-value">{{ kpis.totalCustomers }}</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">Total Orders</span>
+      <span class="kpi-value">{{ kpis.totalOrders }}</span>
+    </div>
+    <div class="kpi-card kpi-success">
+      <span class="kpi-label">Total Revenue</span>
+      <span class="kpi-value">{{ formatCurrency(kpis.totalRevenue) }}</span>
+    </div>
+    <div class="kpi-card kpi-warning">
+      <span class="kpi-label">Outstanding Amount</span>
+      <span class="kpi-value">{{ formatCurrency(kpis.outstandingAmount) }}</span>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="chart-grid">
+    <div class="chart-card">
+      <app-donut [column]="expiryColumn" [data]="expiryData"></app-donut>
+    </div>
+    <div class="chart-card">
+      <app-bar-echart [column]="supplierColumn" [data]="supplierData"></app-bar-echart>
+    </div>
+    <div class="chart-card">
+      <app-pai [column]="customerColumn" [data]="customerData"></app-pai>
+    </div>
+    <div class="chart-card">
+      <app-bar-echart [column]="ordersColumn" [data]="ordersData"></app-bar-echart>
+    </div>
+    <div class="chart-card">
+      <app-donut [column]="billingColumn" [data]="billingData"></app-donut>
+    </div>
+  </div>
+</div>

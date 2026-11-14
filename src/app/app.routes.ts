@@ -9,6 +9,14 @@ export const routes: Routes = [
       ),
     children: [
       {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./pages/dashboard/dashboard.component').then(
+            (m) => m.DashboardComponent,
+          ),
+        outlet: 'subpage',
+      },
+      {
         path: 'supplier',
         loadComponent: () =>
           import('./pages/supplier/supplier.component').then(

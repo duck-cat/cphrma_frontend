@@ -1,0 +1,38 @@
+@if(type=="donut" || type=="doughnut-chart"){
+    <app-donut [column]="column"  [data]="data"></app-donut> 
+}
+@else if(type=="pie-chart" || type=="pai"){
+    <app-pai [column]="column" [data]="data"></app-pai>
+}
+@else if(type=="vertical-bar-chart" || type=="bar-chart"){
+    <app-bar-echart [column]="column"  [data]="data"></app-bar-echart>
+    
+}
+@else if( type=="horizontal-bar-chart"){
+    <app-horizontal-bar-chart [column]="column"[data]="data"></app-horizontal-bar-chart> 
+     <!--<app-bar-echart [column]="column"  [data]="data"></app-bar-echart>--> 
+}
+
+@else if(type=="stacked-bar-chart"){
+    <app-stackedbarcharttype-2 [column]="column" [data]="data"></app-stackedbarcharttype-2>
+}
+@else if(type=="funnel-chart"){
+    <app-funnel-chart [column]="column" [data]="data"></app-funnel-chart>
+}
+@else if(type=="line-chart" || type=="line-echart"){
+    <app-line-echart [column]="column" [data]="data"></app-line-echart>
+}
+@else if( type=="pie-chart"){
+<app-pai [column]="column"[data]="data"></app-pai>
+ 
+}
+@else if( type=="heat-map"){
+<app-heat-map-echart [interval]="interval" [column]="column"[data]="data"></app-heat-map-echart>
+ 
+}
+
+<div class="chunk-loader-overlay" [class.chunk-loader-visible]="data.length==0">
+      <!--<span class="chunk-spinner"></span>-->
+      <span class="chunk-loader-text">No Data</span>
+      <div class="wms-msk"></div>
+    </div>

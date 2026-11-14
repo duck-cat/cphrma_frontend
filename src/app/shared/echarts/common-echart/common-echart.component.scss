@@ -1,0 +1,44 @@
+.chunk-loader-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -56%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+
+  &.chunk-loader-visible {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+  
+}
+
+.chunk-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #ccc;
+  border-top-color: #0078d4;
+  border-radius: 50%;
+  animation: chunk-spin 0.7s linear infinite;
+}
+
+@keyframes chunk-spin {
+  to { transform: rotate(360deg); }
+}
+
+.chunk-loader-text {
+  font-size: 12px;
+  color: #555;
+}

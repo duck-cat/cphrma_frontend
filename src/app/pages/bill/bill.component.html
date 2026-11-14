@@ -1,1 +1,133 @@
-<p>bill works!</p>
+<section class="billing-page">
+  <header class="billing-heading">
+   
+    <div class="heading-actions">
+      <button class="button button-secondary" type="button" (click)="exportHistory()">
+        <i class="pi pi-file-pdf" aria-hidden="true"></i>
+        Export history PDF
+      </button>
+      <button class="button button-primary" type="button" (click)="openNewBilling()">
+        <i class="pi pi-plus" aria-hidden="true"></i>
+        Add billing
+      </button>
+    </div>
+  </header>
+
+  <div *ngIf="errorMessage" class="notice notice-error" role="alert">
+    <span>{{ errorMessage }}</span>
+    <button type="button" aria-label="Dismiss error" (click)="errorMessage = ''">×</button>
+  </div>
+  <div *ngIf="successMessage" class="notice notice-success" role="status">
+    <span>{{ successMessage }}</span>
+    <button type="button" aria-label="Dismiss message" (click)="successMessage = ''">×</button>
+  </div>
+
+  <section class="summary-grid" aria-label="Billing summary">
+    <article class="summary-card">
+      <span class="summary-icon icon-blue"><i class="pi pi-wallet" aria-hidden="true"></i></span>
+      <div><p>Total billed</p><strong>{{ totalBilled | currency:'USD':'symbol':'1.2-2' }}</strong></div>
+    </article>
+    <article class="summary-card">
+      <span class="summary-icon icon-green"><i class="pi pi-check-circle" aria-hidden="true"></i></span>
+      <div><p>Paid</p><strong>{{ totalPaid | currency:'USD':'symbol':'1.2-2' }}</strong></div>
+    </article>
+    <article class="summary-card">
+      <span class="summary-icon icon-orange"><i class="pi pi-clock" aria-hidden="true"></i></span>
+      <div><p>Outstanding</p><strong>{{ totalOutstanding | currency:'USD':'symbol':'1.2-2' }}</strong></div>
+    </article>
+    <article class="summary-card">
+      <span class="summary-icon icon-violet"><i class="pi pi-receipt" aria-hidden="true"></i></span>
+      <div><p>Billing records</p><strong>{{ billings.length }}</strong></div>
+    </article>
+  </section>
+
+  <section class="history-panel">
+    <div class="history-header">
+      <div>
+        <h3>Billing history</h3>
+        <p>Review and manage current and past billing records.</p>
+      </div>
+      <div class="filters">
+        <label class="search-control">
+          <i class="pi pi-search" aria-hidden="true"></i>
+          <input
+            type="search"
+            aria-label="Search billing records"
+            placeholder="Search bills or customers"
+            [(ngModel)]="searchText"
+            (ngModelChange)="updateTableData()"
+          />
+        </label>
+        <select aria-label="Filter by status" [(ngModel)]="statusFilter" (ngModelChange)="updateTableData()">
+          <option value="All">All statuses</option>
+          <option *ngFor="let status of billingStatuses" [value]="status">{{ status }}</option>
+        </select>
+        <select aria-label="Filter by billing type" [(ngModel)]="typeFilter" (ngModelChange)="updateTableData()">
+          <option value="All">All types</option>
+          <option *ngFor="let type of billingTypes" [value]="type">{{ type }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div *ngIf="loading" class="empty-state">Loading billing records…</div>
+    <div *ngIf="!loading && filteredBillings.length === 0" class="empty-state">
+      <i class="pi pi-inbox" aria-hidden="true"></i>
+      <strong>{{ billings.length ? 'No matching billing records' : 'No billing records yet' }}</strong>
+      <span>{{ billings.length ? 'Change your search or filters.' : 'Add a billing record to start your history.' }}</span>
+      <button *ngIf="!billings.length" class="button button-primary" type="button" (click)="openNewBilling()">Add billing</button>
+    </div>
+    <div *ngIf="!loading && filteredBillings.length > 0" class="table-scroll">
+      <app-common-table (eventTrigger)="handleTableAction($event)"></app-common-table>
+      <p class="table-footnote">Showing {{ filteredBillings.length }} of {{ billings.length }} billing record(s).</p>
+    </div>
+  </section>
+</section>
+
+<div *ngIf="formOpen" class="modal-backdrop" (click)="closeForm()">
+  <section class="dialog-card" role="dialog" aria-modal="true" aria-labelledby="billing-form-title" (click)="$event.stopPropagation()">
+    <header class="dialog-header">
+      <div><p class="eyebrow">BILLING DETAILS</p><h2 id="billing-form-title">{{ editingRow === null ? 'Add billing' : 'Edit billing' }}</h2></div>
+      <button type="button" class="close-button" aria-label="Close dialog" (click)="closeForm()">×</button>
+    </header>
+    <app-common-form [fields]="formFields" layout="grid" [columns]="2"></app-common-form>
+    <div class="calculation">
+      <span>Subtotal <strong>{{ formSubtotal | currency:'USD':'symbol':'1.2-2' }}</strong></span>
+      <span>Tax <strong>{{ formTax | currency:'USD':'symbol':'1.2-2' }}</strong></span>
+      <span class="calculation-total">Total <strong>{{ (formSubtotal + formTax) | currency:'USD':'symbol':'1.2-2' }}</strong></span>
+    </div>
+    <footer class="dialog-actions">
+      <button class="button button-secondary" type="button" (click)="closeForm()">Cancel</button>
+      <button class="button button-primary" type="button" [disabled]="saving" (click)="saveBilling()">
+        {{ saving ? 'Saving…' : editingRow === null ? 'Save billing' : 'Save changes' }}
+      </button>
+    </footer>
+  </section>
+</div>
+
+<div *ngIf="selectedBilling as billing" class="modal-backdrop" (click)="closeDetails()">
+  <section class="dialog-card details-card" role="dialog" aria-modal="true" aria-labelledby="billing-detail-title" (click)="$event.stopPropagation()">
+    <header class="dialog-header">
+      <div><p class="eyebrow">{{ billing.type }}</p><h2 id="billing-detail-title">{{ billing.billNumber }}</h2></div>
+      <button type="button" class="close-button" aria-label="Close dialog" (click)="closeDetails()">×</button>
+    </header>
+    <div class="detail-body">
+      <div class="detail-grid">
+        <div><small>CUSTOMER</small><strong>{{ billing.customerName }}</strong><span>{{ billing.customerEmail || 'No email provided' }}</span></div>
+        <div><small>STATUS</small><span class="status" [ngClass]="'status-' + billing.status.toLowerCase().replace(' ', '-')">{{ billing.status }}</span></div>
+        <div><small>ISSUE DATE</small><strong>{{ billing.issueDate | date:'longDate' }}</strong></div>
+        <div><small>DUE DATE</small><strong>{{ billing.dueDate | date:'longDate' }}</strong></div>
+      </div>
+      <div class="detail-description"><small>DESCRIPTION</small><p>{{ billing.description }}</p></div>
+      <div class="detail-line"><span>{{ billing.description }} ({{ billing.quantity }} × {{ billing.unitPrice | currency:'USD':'symbol':'1.2-2' }})</span><strong>{{ billing.subtotal | currency:'USD':'symbol':'1.2-2' }}</strong></div>
+      <div class="detail-line"><span>Tax ({{ billing.taxRate }}%)</span><strong>{{ billing.taxAmount | currency:'USD':'symbol':'1.2-2' }}</strong></div>
+      <div class="detail-line"><span>Payment method</span><strong>{{ billing.paymentMethod }}</strong></div>
+      <div class="detail-line detail-total"><span>Total</span><strong>{{ billing.total | currency:'USD':'symbol':'1.2-2' }}</strong></div>
+    </div>
+    <footer class="dialog-actions">
+      <button class="button button-secondary" type="button" (click)="closeDetails()">Close</button>
+      <button class="button button-primary" type="button" (click)="exportBilling(billing)">
+        <i class="pi pi-file-pdf" aria-hidden="true"></i> Print / Save PDF
+      </button>
+    </footer>
+  </section>
+</div>
