@@ -3,33 +3,37 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
-import {DialogModule} from "primeng/dialog";
-import {DynamicField} from "./../common-form/common-form.model";
-import {CommonFormComponent} from "../common-form/common-form.component";
+import { DialogModule } from 'primeng/dialog';
+import { DynamicField } from './../common-form/common-form.model';
+import { CommonFormComponent } from '../common-form/common-form.component';
 
 @Component({
   selector: 'app-common-dialog',
   standalone: true,
-  imports: [DialogModule,CommonModule, ReactiveFormsModule, ButtonModule,CommonFormComponent],
+  imports: [
+    DialogModule,
+    CommonModule,
+    ReactiveFormsModule,
+    ButtonModule,
+    CommonFormComponent,
+  ],
   templateUrl: './common-dialog.component.html',
   styleUrl: './common-dialog.component.css',
 })
 export class CommonDialogComponent implements AfterViewInit {
-
-  @ViewChild(CommonFormComponent)commonform!:CommonFormComponent;
-   fields: DynamicField[] = [];
+  @ViewChild(CommonFormComponent) commonform!: CommonFormComponent;
+  fields: DynamicField[] = [];
   title = 'Dynamic Form';
   layout: 'vertical' | 'grid' = 'grid';
   columns = 3;
   form = new FormGroup({
-    dynamicForm: new FormControl<any>({})
+    dynamicForm: new FormControl<any>({}),
   });
 
   constructor(
     private ref: DynamicDialogRef,
-    private config: DynamicDialogConfig
+    private config: DynamicDialogConfig,
   ) {
-
     const data = this.config.data || {};
 
     this.fields = data.fields || [];
@@ -41,18 +45,16 @@ export class CommonDialogComponent implements AfterViewInit {
     this.columns = data.columns || 2;
 
     if (data.initialValue) {
-
       this.form.patchValue({
-        dynamicForm: data.initialValue
+        dynamicForm: data.initialValue,
       });
-
     }
   }
 
+  ngAfterViewInit(): void {}
+
   submit(): void {
-
     if (this.form.invalid) {
-
       this.dynamicControl.markAsTouched();
 
       return;
@@ -65,14 +67,11 @@ export class CommonDialogComponent implements AfterViewInit {
   }
 
   cancel(): void {
-
     // Close without returning form data
-    this.ref.close(this?.commonform?.form?.value||{});
+    this.ref.close(this?.commonform?.form?.value || {});
   }
 
   get dynamicControl(): FormControl {
-
     return this.form.get('dynamicForm') as FormControl;
-  
-}
+  }
 }
